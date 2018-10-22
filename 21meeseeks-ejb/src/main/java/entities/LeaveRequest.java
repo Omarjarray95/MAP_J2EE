@@ -28,6 +28,7 @@ public class LeaveRequest implements Serializable{
 	private String description;
 	@ManyToOne
 	private LeaveType leaveType;
+	
 	public int getIdLeaveRequest() {
 		return idLeaveRequest;
 	}
