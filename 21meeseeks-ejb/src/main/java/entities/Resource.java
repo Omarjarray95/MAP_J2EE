@@ -1,10 +1,11 @@
 package entities;
 
 import java.io.Serializable;
+
 import java.util.List;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -23,17 +24,19 @@ public class Resource extends User implements Serializable {
 	private boolean state;
 	private Availability  availability;
 	@OneToMany(mappedBy="resource")
-	 private List<Leave> leaves;
+	private List<DayOff> dayOffs;
 	@OneToMany
-	 private List<Note> notes;
+	private List<Note> notes;
 	@OneToMany
-	 private List<Holidays> holidays;
+	private List<Holidays> holidays;
 	@OneToMany
 	private List<Level> levels;
 	@OneToMany
 	private List<Term> terms;
 	@OneToMany
 	private List<LeaveRequest> leaveRequests;
+	@ManyToMany(mappedBy="resources")
+	private List<Field> fields;
 	
 	
 	public List<LeaveRequest> getLeaveRequests() {
@@ -103,11 +106,11 @@ public class Resource extends User implements Serializable {
 	public void setAvailability(Availability availability) {
 		this.availability = availability;
 	}
-	public List<Leave> getLeaves() {
-		return leaves;
+	public List<DayOff> getLeaves() {
+		return dayOffs;
 	}
-	public void setLeaves(List<Leave> leaves) {
-		this.leaves = leaves;
+	public void setLeaves(List<DayOff> dayOffs) {
+		this.dayOffs = dayOffs;
 	}
 	public List<Note> getNotes() {
 		return notes;
