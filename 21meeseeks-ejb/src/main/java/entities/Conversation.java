@@ -19,7 +19,7 @@ public class Conversation implements Serializable
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idConversationn;
+	private int idConversation;
 	
 	@ManyToMany
 	private List<User> participants;
@@ -35,12 +35,12 @@ public class Conversation implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 
-	public int getIdConversationn() {
-		return idConversationn;
+	public int getIdConversation() {
+		return idConversation;
 	}
 
-	public void setIdConversationn(int idConversation) {
-		this.idConversationn = idConversation;
+	public void setIdConversation(int idConversation) {
+		this.idConversation = idConversation;
 	}
 
 	public List<User> getParticipants() {

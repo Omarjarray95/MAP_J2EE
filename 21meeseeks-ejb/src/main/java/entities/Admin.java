@@ -8,17 +8,17 @@ import javax.persistence.Entity;
 @Entity
 public class Admin extends User implements Serializable{
 	
-	private String firstName;
+	private String firstNam;
 	private  String lastName;
 	
 	
 	
 	
-	public String getFirstName() {
-		return firstName;
+	public String getFirstNam() {
+		return firstNam;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setFirstNam(String firstName) {
+		this.firstNam = firstName;
 	}
 	public String getLastName() {
 		return lastName;
