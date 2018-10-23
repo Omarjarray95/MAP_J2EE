@@ -28,6 +28,7 @@ public class Resource extends User implements Serializable {
 	@ManyToOne
 	private Seniority seniority;
 	private boolean state;
+	@Enumerated(EnumType.STRING)
 	private Availability availability;
 	@OneToOne
 	private Resume resume;

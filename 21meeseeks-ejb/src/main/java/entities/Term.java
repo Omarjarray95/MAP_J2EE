@@ -24,6 +24,7 @@ public class Term implements Serializable{
 	private Date dateEnd;
 	private float dailyFee;
 	private String description;
+	private int numberofDaysTerm;
 	
 
 	@ManyToOne
@@ -84,6 +85,12 @@ public class Term implements Serializable{
 	}
 	public void setProjects(Project projects) {
 		this.projects = projects;
+	}
+	public int getNumberofDaysTerm() {
+		return numberofDaysTerm;
+	}
+	public void setNumberofDaysTerm(int numberofDaysTerm) {
+		this.numberofDaysTerm = numberofDaysTerm;
 	}
 	
 }
