@@ -1,14 +1,14 @@
 package services;
 
 import javax.ejb.LocalBean;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import Interface.ResourceServiceLocal;
-import Interface.ResourceServiceRemote;
+import interfaces.ResourceServiceLocal;
+import interfaces.ResourceServiceRemote;
 import entities.Resource;
-import entities.Resume;
 
 /**
  * Session Bean implementation class ResourceService
