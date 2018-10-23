@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,6 +22,8 @@ public class Resource extends User implements Serializable {
 	private String lastName;
 	private String photo;
 	private Double rate;
+	
+	@Enumerated(EnumType.STRING)
 	private ContractType contractType;
 	@ManyToOne
 	private Seniority seniority;

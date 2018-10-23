@@ -1,8 +1,10 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,8 +17,14 @@ public class Establishment implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idEstablishment;
 	private String nameEstablishment;
-	@OneToMany(mappedBy = "establishment")
-	private List<Degree> degreeList;
+	
+	@OneToMany(mappedBy = "establishment", cascade= CascadeType.PERSIST)
+	private List<Degree> degreeList = new ArrayList<>();
+	
+	public void addDegree(Degree dg){
+		dg.setEstablishment(this);
+		this.degreeList.add(dg);
+	}
 
 	public int getIdEstablishment() {
 		return idEstablishment;

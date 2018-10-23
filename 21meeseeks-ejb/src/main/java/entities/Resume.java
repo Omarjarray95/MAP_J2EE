@@ -1,8 +1,10 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,15 +18,30 @@ public class Resume implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idResume;
+	
 	@OneToOne(mappedBy = "resume")
 	private Resource resource;
+	
 	private String description;
+	
 	@ManyToMany
 	private List<Certificate> certificates;
-	@OneToMany(mappedBy = "resume")
-	private List<Degree> listDegree;
-	@OneToMany(mappedBy = "resume")
-	private List<JobDate> listJob;
+	
+	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
+	private List<Degree> listDegree = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
+	private List<JobDate> listJob = new ArrayList<>();
+	
+	public void addDegree(Degree degree){
+		degree.setResume(this);
+		this.listDegree.add(degree);
+	}
+	
+	public void addJob(JobDate jd){
+		jd.setResume(this);
+		this.listJob.add(jd);
+	}
 
 	public int getIdResume() {
 		return idResume;
