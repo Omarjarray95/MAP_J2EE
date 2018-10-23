@@ -8,5 +8,5 @@ import interfaces.RequestServiceLocal;
 @ApplicationPath("rest")
 public class RestActivator extends Application 
 {
-
+	
 }
