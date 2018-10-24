@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>tn.esprit</groupId>
-			<artifactId>21meeseeks-web</artifactId>
+			<artifactId>mee21seeks-web</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
