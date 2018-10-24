@@ -1,10 +1,11 @@
 package dashbord.interfaces;
 
 import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 
 import entities.Resource;
 
-@LocalBean
+@Remote
 public interface ResourceBusinessInterface {
 
 	public int countResource();

@@ -16,7 +16,7 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 	@Override
 	public int countResource() {
 		// TODO Auto-generated method stub
-		int count = (Integer)em.createQuery("SELECT count(r) FROM Resource r").getSingleResult();
+		int count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r").getSingleResult());
 		return count;
 	}
 

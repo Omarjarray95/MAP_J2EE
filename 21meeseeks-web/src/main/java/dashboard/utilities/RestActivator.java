@@ -3,7 +3,7 @@ package dashboard.utilities;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("dashboard")
+@ApplicationPath("rest")
 public class RestActivator extends Application{
 
 }
