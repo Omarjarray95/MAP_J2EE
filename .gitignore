@@ -5,3 +5,6 @@
 21meeseeks-ejb/.settings
 21meeseeks-web/target
 21meeseeks-web/.settings
+21meeseeks-ejb/src/main/resources/META-INF/persistence\.xml
+
+21meeseeks-ejb/src/main/resources/META-INF/
