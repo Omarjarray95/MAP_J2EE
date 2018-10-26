@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale.Category;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -14,18 +15,29 @@ public class Client extends User implements Serializable {
 
 	private String clientName;
 	private String logo;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private ClientType clientType;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private ClientCategory clientCategory;
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client"
+			,fetch=FetchType.EAGER)
 	private List<Organigram> organigrams;
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client"
+			,fetch=FetchType.EAGER)
 	private List<Note> notes;
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client"
+			,fetch=FetchType.EAGER)
 	private List<ProjectRequest> projectRequests;
 	
 	
+	@Override
+	public String toString() {
+		return "Client [clientName=" + clientName + ", logo=" + logo
+				+ ", clientType=" + clientType + ", clientCategory="
+				+ clientCategory + ", organigrams=" + organigrams + ", notes="
+				+ notes + ", projectRequests=" + projectRequests + "]";
+	}
+
 	public List<ProjectRequest> getProjectRequests() {
 		return projectRequests;
 	}
