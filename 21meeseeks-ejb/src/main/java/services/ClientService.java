@@ -35,13 +35,15 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
     /**
      * Default constructor. 
      */
-    public ClientService() {
-        // TODO Auto-generated constructor stub
-    }
+    public ClientService() {}
     
-    //add new client
+    /*
+    add new client and return his id
+    */
+    
 	@Override
 	public int addClient(Client c) {
+        c.setClientCategory(this.findClientCategory(c.getClientCategory()));
 		em.persist(c);
 		return (c.getIdUser());
 	}
@@ -77,6 +79,12 @@ return c;
 	  return 0; 
 	}
 	@Override
+	public ClientCategory findClientCategory(ClientCategory cc) {
+		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e  where e.name = :name",ClientCategory.class);
+		ClientCategory cf=query.setParameter("name",cc.getName()).getSingleResult();
+return cf;
+	}
+	@Override
 	public boolean deleteClientCategory(String title) {
 		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e  where e.name = :name",ClientCategory.class);
 		if(query.setParameter("name",title).getResultList().size()!=0)
@@ -86,6 +94,9 @@ return c;
 		}
 		return false;
 	}
+	
+	
+	
 	@Override
 	public List<ClientCategory> listClientCategories() {
 		// TODO Auto-generated method stub
@@ -126,8 +137,20 @@ return null;
 		CriteriaQuery<Client> cquery = cb.createQuery(Client.class);
 		Root<Client> sm = cquery.from(Client.class);
 		for (Map.Entry<String, String> entry : criterias.entrySet())
+		{	if(entry.getKey().equals("clientCategory"))
 		{
+			cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
+
+		}
+		else if(entry.getKey().equals("clientType"))
+		{ 
+			cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
+
+		}
+		else
+			{
 			cquery.where(cb.like(sm.get(entry.getKey()), entry.getValue().toUpperCase() ));
+			}
 
 		}
 		TypedQuery<Client> query=em.createQuery(cquery);

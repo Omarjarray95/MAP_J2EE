@@ -22,6 +22,7 @@ public String clienttoJson(Client c);
 public String clientlisttoJson(List<Client> c);
 
 //customize category
+public ClientCategory findClientCategory(ClientCategory cc);
 public int addClientCategory(ClientCategory cc);
 public boolean deleteClientCategory(String title);
 public List<ClientCategory> listClientCategories();

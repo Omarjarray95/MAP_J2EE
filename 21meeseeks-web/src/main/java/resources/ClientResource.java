@@ -40,21 +40,32 @@ public class ClientResource {
 	@EJB(beanName="ClientService")
 	ClientServiceLocal CSL;
 	private Map<String, String> criterias;
-//using a map to filter query with criteria to fetch clients , or just display all of them 
+	
+	
+	
+	
+	
+	/*  searching for client using multiple criterias
+	 * used a map to store criterias passed in path param
+	 * to use them later on in the function.
+	 */
 	  @GET
 	  @Produces( MediaType.APPLICATION_JSON )
 	  public Response findClientsByName(
+			    @QueryParam("idUser") String idUser,
 			    @QueryParam("clientName") String clientName,
 				@QueryParam("email") String email,
 				@QueryParam("address") String address,
 				@QueryParam("clientType") String clientType,
-				@QueryParam("clientCatogry") String clientCategory
+				@QueryParam("clientCategory") String clientCategory
 			  ) {
+		  enums.ClientType ct=null;
 		  criterias=new HashMap<String, String>();
-		  if(clientName!=null){criterias.put("clientName","%"+clientName+"%");}
-		  if(email!=null){criterias.put("email", email);}
-		  if(address!=null){criterias.put("address", address);}
-		  if(clientType!=null){criterias.put("clienType", clientType);}
+		  if(idUser!=null){criterias.put("idUser",idUser);}
+		  if(clientName!=null){criterias.put("clientName",clientName+"%");}
+		  if(email!=null){criterias.put("email", email+"%");}
+		  if(address!=null){criterias.put("address", address+"%");}
+		  if(clientType!=null){criterias.put("clientType", ct.valueOf(clientType).toString());}
 		  if(clientCategory!=null)criterias.put("clientCategory", clientCategory);
 		List<Client> c=CSL.getClientsByCriterias(criterias);
 		if(c.size()!=0)
@@ -68,15 +79,18 @@ public class ClientResource {
 	  }
 
 	  
-	  
+	  /*Add client received through json and return 
+	   * the client in json format.
+	   */
 	  
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces( MediaType.TEXT_PLAIN)
+	@Produces( MediaType.APPLICATION_JSON)
 	public Response addClient(Client c)
 	{
+		
 		c.setIdUser(CSL.addClient(c));
-		return Response.status(Status.CREATED).entity(c).build();
+		return Response.status(Status.CREATED).entity(CSL.clienttoJson(c)).build();
 	}
 
 	
@@ -97,6 +111,11 @@ public class ClientResource {
 		cc.setIdCategory(CSL.addClientCategory(cc));
 		return Response.status(Status.CREATED).entity(cc).build();
 	}
+	
+	/*
+	 * delete a Category by name
+	 */
+	
 	  @DELETE
 	  @Path("category/{name}")
 	  public Response deleteClientCategory(@PathParam("name") String name) {
