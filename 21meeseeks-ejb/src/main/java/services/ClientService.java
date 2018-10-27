@@ -144,7 +144,7 @@ return null;
 		}
 		else if(entry.getKey().equals("clientType"))
 		{ 
-			cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
+			cquery.where(cb.equal(sm.get("clientType"), enums.ClientType.valueOf(entry.getValue().toUpperCase()) ));
 
 		}
 		else
