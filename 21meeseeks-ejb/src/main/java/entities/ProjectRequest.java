@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +20,7 @@ public class ProjectRequest implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRequest;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date depositDate;
 	private String nameProject;
 	@Temporal(TemporalType.DATE)
@@ -25,11 +28,13 @@ public class ProjectRequest implements Serializable{
 	@Temporal(TemporalType.DATE)
 	private Date dateEndProject;
 	private String descriptionProject;
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<Competence> competences; 
 	private int resourcesNumber;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Client client;
+	private String presentedBy;
+	private String comments;
 	
 	public int getIdRequest() {
 		return idRequest;
@@ -85,8 +90,17 @@ public class ProjectRequest implements Serializable{
 	public void setClient(Client client) {
 		this.client = client;
 	}
-	
-	
-	
+	public String getPresentedBy() {
+		return presentedBy;
+	}
+	public void setPresentedBy(String presentedBy) {
+		this.presentedBy = presentedBy;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 	
 }

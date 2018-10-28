@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,10 +25,12 @@ public class LeaveRequest implements Serializable{
 	private Date fromDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date toDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date depositDate;
 	@ManyToOne
 	private Resource resource;
 	private String description;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private LeaveType leaveType;
 	
 	public int getIdLeaveRequest() {
@@ -65,5 +69,12 @@ public class LeaveRequest implements Serializable{
 	public void setLeaveType(LeaveType leaveType) {
 		this.leaveType = leaveType;
 	}
+	public Date getDepositDate() {
+		return depositDate;
+	}
+	public void setDepositDate(Date depositDate) {
+		this.depositDate = depositDate;
+	}
+	
 	
 }
