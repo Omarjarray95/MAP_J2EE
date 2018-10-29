@@ -2,10 +2,13 @@ package dashboard.resources;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -17,6 +20,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -25,7 +29,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import dashbord.interfaces.ResourceBusinessInterface;
+import entities.Competence;
 import entities.Resource;
+import utilities.Secured;
 
 @Stateless
 @Path("resources")
@@ -57,7 +63,6 @@ public class ResourceService {
 				dateFromDate = new Date(dateFrom);
 				dateToDate = new Date(dateTo);
 			}
-			
 		}
 		
 		if (highest != null &&highest==true) {
@@ -90,11 +95,48 @@ public class ResourceService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response countResourceDynamic(@QueryParam(value="seniority") Integer seniority,@QueryParam(value="availability") String availability){
-		double percentage = (double)rbi.countResourceDynamic(seniority, null, null, availability , false , false)/rbi.countResource()*100;
+	public Response countResourceDynamic(
+			@QueryParam(value="seniority") Integer seniority,
+			@QueryParam(value="availability") String availability,
+			@QueryParam(value="competence") Integer idCompetence,
+			@QueryParam(value="level") Integer level
+			){
+		//To Be Continued 
+		//Complete the Field and the other parameters
+		//Test the case where more than one competence is required
+		
+		if (level!=null && idCompetence == null)
+			return Response.status(Status.BAD_REQUEST).entity("Level without Competence").build();
+		double percentage = (double)rbi.countResourceDynamic(seniority, idCompetence, null, availability , false , false,level)/rbi.countResource()*100;
 		System.out.println(percentage);
-		System.out.println((double)rbi.countResourceDynamic(seniority, null, null, availability , false , false)/rbi.countResource());
+		System.out.println(rbi.countResourceDynamic(seniority, idCompetence, null, availability , false , false,level));
+		System.out.println((double)rbi.countResourceDynamic(seniority, idCompetence, null, availability , false ,false, level)/rbi.countResource());
 		return Response.status(Status.ACCEPTED).entity(percentage+"%").build();
+	}
+	
+	@GET
+	@Path("competence/resource")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCompetenceByResource(){
+		Map<Competence, Long> map = rbi.getRessourcesByCompetence();
+	    GenericEntity<Map<Competence,Long>> entity = new GenericEntity<Map<Competence,Long>>(map) {};
+	    List<Competence> listC = map.keySet().stream().collect(Collectors.toList());
+	    List<List<Object>> listO = new ArrayList<>();
+	    for(Map.Entry<Competence, Long> e : map.entrySet())
+	    {
+	    	List <Object> list = new ArrayList<>();
+	    	list.add((Competence)e.getKey());
+	    	list.add((Long)e.getValue());
+	    	listO.add(list);
+	    }
+	    return Response.status(Status.ACCEPTED).entity(listO).build();
+	}
+	
+	@GET
+	@Path("competence/xxx/aaa")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCompetence(){
+		return Response.status(Status.ACCEPTED).entity(rbi.getCompetence()).build();
 	}
 	
 }
