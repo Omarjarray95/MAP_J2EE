@@ -106,6 +106,12 @@ public class Project  implements Serializable{
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	
 	
