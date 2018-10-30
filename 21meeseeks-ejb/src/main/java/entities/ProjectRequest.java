@@ -14,8 +14,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import enums.RequestStatus;
 @Entity
-public class ProjectRequest implements Serializable{
+public class ProjectRequest implements Serializable
+{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +38,37 @@ public class ProjectRequest implements Serializable{
 	private Client client;
 	private String presentedBy;
 	private String comments;
+	private RequestStatus requestStatus;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date reviewDate;
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Admin> reviewedBy;
+	private boolean archived;
 	
+	public RequestStatus getRequestStatus() {
+		return requestStatus;
+	}
+	public void setRequestStatus(RequestStatus requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+	public Date getReviewDate() {
+		return reviewDate;
+	}
+	public void setReviewDate(Date reviewDate) {
+		this.reviewDate = reviewDate;
+	}
+	public List<Admin> getReviewedBy() {
+		return reviewedBy;
+	}
+	public void setReviewedBy(List<Admin> reviewedBy) {
+		this.reviewedBy = reviewedBy;
+	}
+	public boolean isArchived() {
+		return archived;
+	}
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
 	public int getIdRequest() {
 		return idRequest;
 	}

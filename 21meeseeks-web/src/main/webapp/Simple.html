@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple WebSocket</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Simple WebSocket</h1>
+        <p>In this simple websocket example, a scheduler in the server sends
+            messages to all websocket sessions every ten seconds. Also the
+            javascript client sends a message to the server every 5 seconds.</p>
+        <p><a href="index.html">&lt; Back</a></p>
+        <div id="messages"></div>
+        <script type="text/javascript">
+            var ws = new WebSocket("ws://localhost:8098/websockets/Websocketendpoint");
+            var timer;
+            ws.onopen = function() {
+                appendMessage('info', 'WebSocket connection opened!');
+                initTimer();
+            };
+            ws.onmessage = function(event) {
+                appendMessage('message',event.data);
+            };
+            ws.onclose = function() {
+                appendMessage('warn', 'WebSocket closed');
+                stopTimer();
+            };
+            ws.onerror = function(err) {
+                appendMessage(err);
+            };
+            
+            function appendMessage(type, text) {
+                document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
+            }
+            function initTimer() {
+                timer = setInterval(sendHelloMessage, 5000);
+            }
+            function stopTimer() {
+                clearInterval(timer);
+            }
+            function sendHelloMessage() {
+                ws.send("Hello");
+            }
+        </script>
+    </body>
+</html>
