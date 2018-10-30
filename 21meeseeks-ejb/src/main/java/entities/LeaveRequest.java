@@ -27,7 +27,7 @@ public class LeaveRequest implements Serializable{
 	private Date toDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date depositDate;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Resource resource;
 	private String description;
 	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
