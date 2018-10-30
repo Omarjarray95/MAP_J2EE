@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import entities.Client;
+import entities.Competence;
 import entities.Project;
 import entities.ProjectRequest;
 
@@ -19,6 +20,7 @@ public Project addProjectfromRequest(ProjectRequest request);
 public List<Project> getAllProjects();
 public String projectlisttoJson(List<Project> c) ;
 public String  projectoJson(Project c) ;
+public List<Competence> CompetencesSuggesionByProjectDesc(Project p);
 
 
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,13 +17,19 @@ public class Competence  implements Serializable{
 	private int idCompetence;
 	
 	private String Label;
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	private List<Level> levels;
-	@ManyToMany(mappedBy="competences")
+	@ManyToMany(mappedBy="competences" ,fetch=FetchType.EAGER)
 	private List<ProjectRequest> projectRequests;
+	private String description;
 	
 	
-	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public List<ProjectRequest> getProjectRequests() {
 		return projectRequests;
 	}

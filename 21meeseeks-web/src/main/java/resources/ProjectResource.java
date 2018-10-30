@@ -1,5 +1,7 @@
 package resources;
 
+import java.util.List;
+
 import interfaces.ClientServiceLocal;
 import interfaces.ProjectServiceLocal;
 
@@ -14,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import entities.Competence;
 import entities.Project;
 import entities.ProjectRequest;
 
@@ -39,5 +42,14 @@ public class ProjectResource {
 	
 	}
 	
-	
+	@POST
+	@Path("suggestion")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response suggestComptence(Project p)
+	{
+		List<Competence> c=PSL.CompetencesSuggesionByProjectDesc(p);
+		return Response.status(Status.CREATED).entity(c).build();
+
+	}
 }

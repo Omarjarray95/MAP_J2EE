@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -155,5 +156,41 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 		
 		return test;
 		}
+	@Override
+	public List<Competence> CompetencesSuggesionByProjectDesc(Project p) {
+		List<String> items = Arrays.asList(p.getDescription().split("\\s+"));
+		Competence c1=new Competence();
+		c1.setDescription("network intrusion security ");
+		c1.setLabel("nids");
+		Competence c2=new Competence();
+		c2.setLabel("peinture");
+		c2.setDescription("dessin fazet barsha hajet okhrin");
+		em.persist(c1);
+		em.persist(c2);
+		/*CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Competence> c = cb.createQuery(Competence.class);
+		Root<Competence> root = c.from(Competence.class);
+		c.where(cb.like(root.<String> get("description"),"%all%"));
+		 for(String param:items) 
 
+		 {	System.out.println(param);
+			 cb.or(cb.like(root.<String> get("description"),"%"+param+"%"));}
+
+		TypedQuery<Competence> tq = em.createQuery(c);*/
+		String query="SELECT c FROM Competence c WHERE c.description LIKE  '%georgesvzrvsf%' ";
+ 		TypedQuery<Competence> q = em.createQuery(query,Competence.class);
+
+		 for(String param:items) 
+
+		 {	System.out.println(param);
+             query=query+"OR c.description   LIKE :param ";
+     		 q = em.createQuery(query,Competence.class);
+     		q.setParameter("param", "%" +param + "%");
+
+			 }
+
+		List<Competence> results = q.getResultList();
+		
+		return results;
+	}
 }
