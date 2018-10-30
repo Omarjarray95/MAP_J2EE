@@ -83,30 +83,7 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 
 	@Override
 	public List<Project> getAllProjects() {
-		Date d=new Date();
-		Project p=new Project();
-		Client c=new Client();
-		em.persist(c);
-		p.setClient(c);
-		p.setName("theproject");
-		p.setDateStart(d);
-		Competence c1=new Competence();
-		c1.setLabel("jee");
-		em.persist(c1);
-		Resource r1=new Resource();
-		Resource r2=new Resource();
-		Level l1=new Level();
-		l1.setCompetences(c1);
-		l1.setResources(r1);
-		l1.setLevel(50);
-		Level l2=new Level();
-		l2.setCompetences(c1);
-		l2.setLevel(2);
-		em.persist(r1);
-		em.persist(r2);
-		em.persist(l1);
-		em.persist(l2);
-		em.persist(p);
+		
 		TypedQuery<Project> query=em.createQuery("SELECT e from Project e",Project.class);
 		List<Project> cf=query.getResultList();
 		return cf;
@@ -159,14 +136,14 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 	@Override
 	public List<Competence> CompetencesSuggesionByProjectDesc(Project p) {
 		List<String> items = Arrays.asList(p.getDescription().split("\\s+"));
-		Competence c1=new Competence();
+	/*	Competence c1=new Competence();
 		c1.setDescription("network intrusion security ");
 		c1.setLabel("nids");
 		Competence c2=new Competence();
 		c2.setLabel("peinture");
 		c2.setDescription("dessin fazet barsha hajet okhrin");
 		em.persist(c1);
-		em.persist(c2);
+		em.persist(c2);*/
 		/*CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Competence> c = cb.createQuery(Competence.class);
 		Root<Competence> root = c.from(Competence.class);
@@ -177,20 +154,26 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 			 cb.or(cb.like(root.<String> get("description"),"%"+param+"%"));}
 
 		TypedQuery<Competence> tq = em.createQuery(c);*/
-		String query="SELECT c FROM Competence c WHERE c.description LIKE  '%georgesvzrvsf%' ";
+		String query="SELECT c FROM Competence c WHERE c.description LIKE  '%everything%' ";
  		TypedQuery<Competence> q = em.createQuery(query,Competence.class);
 
 		 for(String param:items) 
 
 		 {	System.out.println(param);
-             query=query+"OR c.description   LIKE :param ";
-     		 q = em.createQuery(query,Competence.class);
-     		q.setParameter("param", "%" +param + "%");
-
+             query=query+"  OR c.description   LIKE '%" +param + "%' ";
 			 }
+ 		 q = em.createQuery(query,Competence.class);
 
 		List<Competence> results = q.getResultList();
 		
 		return results;
 	}
+
+	@Override
+	public Competence testaddCompetence(Competence c) {
+		em.persist(c);
+		// TODO Auto-generated method stub
+		return c;
+	}
+	
 }

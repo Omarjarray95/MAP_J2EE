@@ -26,6 +26,7 @@ public ClientCategory findClientCategory(ClientCategory cc);
 public int addClientCategory(ClientCategory cc);
 public boolean deleteClientCategory(String title);
 public List<ClientCategory> listClientCategories();
+public ClientCategory editClientCategory(ClientCategory c);
 
 
 }

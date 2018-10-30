@@ -52,4 +52,13 @@ public class ProjectResource {
 		return Response.status(Status.CREATED).entity(c).build();
 
 	}
+	@POST
+	@Path("test/competence")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response testaddComptence(Competence c)
+	{      
+		return Response.status(Status.CREATED).entity(PSL.testaddCompetence(c)).build();
+
+	}
 }

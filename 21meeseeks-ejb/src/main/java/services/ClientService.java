@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import entities.Client;
 import entities.ClientCategory;
+import entities.Project;
 
 /**
  * Session Bean implementation class ClientService
@@ -42,7 +43,17 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
 
 	@Override
 	public int addClient(Client c) {
+		if(c.getClientCategory()!=null){
+			if(findClientCategory(c.getClientCategory())!=null)
+			{
         c.setClientCategory(this.findClientCategory(c.getClientCategory()));
+			}
+			else
+			{
+				c.setClientCategory(null);
+			}
+		
+		}
 		em.persist(c);
 		return (c.getIdUser());
 	}
@@ -141,8 +152,29 @@ return cf;
 	@Override
 	public List<ClientCategory> listClientCategories() {
 		// TODO Auto-generated method stub
-		return null;
+		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e",ClientCategory.class);
+		List<ClientCategory> cf=query.getResultList();
+		return cf;
 	}
+
+	
+
+	@Override
+	public ClientCategory editClientCategory(ClientCategory c) {
+		// TODO Auto-generated method stub
+		ClientCategory cc=em.find(ClientCategory.class,c.getIdCategory());
+		if((cc!=null))
+		{
+			cc.setDescription(c.getDescription());
+			cc.setName(c.getName());
+			em.merge(cc);
+				
+		}
+		return cc;
+		
+	}	
+	
+	
 	//
 	//json converting
 	//
@@ -179,6 +211,7 @@ return cf;
 			
 			return test;
 	}
+
 
 	
 

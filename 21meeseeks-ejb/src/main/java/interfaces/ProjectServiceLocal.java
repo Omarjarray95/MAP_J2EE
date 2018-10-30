@@ -21,6 +21,6 @@ public List<Project> getAllProjects();
 public String projectlisttoJson(List<Project> c) ;
 public String  projectoJson(Project c) ;
 public List<Competence> CompetencesSuggesionByProjectDesc(Project p);
-
+public Competence testaddCompetence(Competence c);
 
 }
