@@ -2,6 +2,9 @@ package dashbord.interfaces;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
+import entities.Term;
 
 public interface TermsBusinessInterface {
 
@@ -12,7 +15,9 @@ public interface TermsBusinessInterface {
 	public float countTermsFreelanceVSEmployee();
 	public float totalIncome();
 	public float monthlyIncomeBy(LocalDate year);
-	public float incomeInPeriod(Date dateFrom , Date dateTo);
+	public Double incomeInPeriod(Date dateFrom , Date dateTo);
+	public List<Term> getTermsByResource(Integer id,Date dateFrom , Date dateTo);
+	public Double AVGTermDays(Date dateFrom , Date dateTo);
 	
 	
 }

@@ -19,6 +19,7 @@ public class Level  implements Serializable{
 	private int yearsExperience;
 	@ManyToOne
 	@JoinColumn(name="idResource",referencedColumnName="idUser",insertable=false,updatable=false)
+	
 	private Resource resources;
 	@ManyToOne
 	@JoinColumn(name="idCompetence",referencedColumnName="idCompetence",insertable=false,updatable=false)

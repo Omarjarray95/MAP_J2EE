@@ -4,10 +4,13 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
@@ -28,7 +31,9 @@ import dashbord.interfaces.ResourceBusinessInterface;
 import entities.Competence;
 import entities.Level;
 import entities.Resource;
+import entities.Term;
 import enums.Availability;
+import enums.ContractType;
 
 @Stateless
 public class ResourceBusiness implements ResourceBusinessInterface{
@@ -43,18 +48,15 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 		return count;
 	}
 
-	public Map<Resource,Long> monthlyMostTerm(){
-		Calendar calendar = Calendar.getInstance();
-		List<String> months = new DateFormatSymbols().getMonths();
-		for()
-	}
-	
-	
 	@Override
 	public Map<Resource,Long> getMostTerm(Integer limit,Date dateFrom , Date dateTo) {
 		// TODO Auto-generated method stub
 		Resource r = new Resource();
 		Long count = new Long(0);
+		if (dateFrom==null)
+			dateFrom = new Date(0);
+		if (dateTo==null)
+			dateTo= new Date();
 				
 		//Split the Query into Conditions
 		//explicit : => The DateStart AND DateEnd should be included
@@ -114,37 +116,47 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 	@Override
 	public Integer countResourceFreelancer() {
 		// TODO Auto-generated method stub
-		return null;
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r WHERE r.contractType=:freelancer").setParameter("freelancer",ContractType.Freelancer).getSingleResult());
+		return count;
 	}
 
 	@Override
 	public Integer countResourceLevio() {
 		// TODO Auto-generated method stub
-		return null;
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r WHERE r.contractType=:employee").setParameter("employee",ContractType.Employee).getSingleResult());
+		return count;
 	}
 
 	@Override
 	public Integer countResourceAvailable() {
 		// TODO Auto-generated method stub
-		return null;
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r where r.availability = available").getSingleResult());
+		return count;
 	}
 
 	@Override
 	public Integer countResourceInDayOff() {
 		// TODO Auto-generated method stub
-		return null;
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r , DayOff d WHERE r.idUser = d.resource AND :dateNow BETWEEN d.startDate AND d.endDate ")
+				.setParameter("dateNow",new Date()).getSingleResult());
+		return count;
 	}
 
 	@Override
 	public Integer countResourceByField(Integer idField) {
 		// TODO Auto-generated method stub
-		return null;
+		// Problem In Join
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r , Field f WHERE "
+				+ "f.idField = :field JOIN f.resources ").setParameter("field", idField).getSingleResult());
+		return count;
 	}
 
 	@Override
 	public Integer countResourceByCompetence(Integer idCompetence) {
 		// TODO Auto-generated method stub
-		return null;
+		Integer count =  Math.toIntExact((Long)em.createQuery("SELECT count(r) FROM Resource r , Level l WHERE r.idUser = l.pkLevel.idResource AND l.pkLevel.idCompetence = :competence")
+				.setParameter("competence", idCompetence).getSingleResult());
+		return count;
 	}
 
 	@Override
@@ -152,7 +164,7 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 			boolean dayOff, boolean type,Integer level) {
 		// TODO Auto-generated method stub
 		String and = " and ";
-		String query = "SELECT count(r) FROM Resource r , Level l WHERE ";
+		String query = "SELECT count(r) FROM Resource r WHERE ";
 		String seniority = "";
 		
 		System.out.println(idSeniority);
@@ -164,12 +176,31 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 		if(available!=null)
 			query += "r.availability='"+available +"'" +and;
 		if(idCompetence!=null){
+			StringBuilder sb = new StringBuilder(query);
+			sb.insert(query.indexOf("WHERE"), ", Level l ");
+			query = sb.toString();
+			System.out.println(query);
 			query += "l.pkLevel.idCompetence="+idCompetence+"" +and+"l.pkLevel.idResource=r.idUser" + and;
 			if (level!=null) {
 				query+="l.level >= " + level + and;
 			}
+			System.out.println(query);
 		}
-		
+		if (dayOff){
+			StringBuilder sb = new StringBuilder(query);
+			sb.insert(query.indexOf("WHERE"), " , DayOff d ");
+			query = sb.toString();
+			query+= "r.idUser = d.resource AND '"+new SimpleDateFormat("yyyy-MM-dd").format(new Date())+"' BETWEEN d.startDate AND d.endDate"+and;
+		}
+		if(idField!=null){
+			StringBuilder sb = new StringBuilder(query);
+			//sb.insert(query.indexOf("WHERE"), ", Field f ");
+			sb.insert(query.indexOf("WHERE"), " LEFT JOIN r.fields f ");
+			query = sb.toString();
+			System.out.println(query);
+			query += "f.idField="+idField+"" +and;
+		}
+			
 		if (query.endsWith(and)) 
 			query = query.substring(0, query.lastIndexOf(and));
 		
@@ -185,30 +216,24 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 		return count;
 	}
 	
-	//Calculate Number of Days between too Dates without counting the weekends
 	
-	private long countWeekDaysStream ( LocalDate start , LocalDate stop ) {
-	    // Code taken from the Answer by Ravindra Ranwala.
-	    // https://stackoverflow.com/a/51010738/642706
-	    long count = 0;
-	    Set < DayOfWeek > weekend = EnumSet.of( DayOfWeek.SATURDAY , DayOfWeek.SUNDAY );
-	    final long weekDaysBetween =  getDays(start, start.until(stop, ChronoUnit.DAYS))
-	    		.filter( d -> ! weekend.contains( ((LocalDate)d).getDayOfWeek() ) ).count();
-	    		//start.dates until(stop, ChronoUnit.DAYS)
-	              //                       .filter( d -> ! weekend.contains( d.getDayOfWeek() ) )
-	                //                     .count();
-	    return count;
-	}
-	public static Stream<LocalDate> getDays(LocalDate start, long days)
-    {
-        return Stream.iterate(start, date -> date.plusDays(1))
-                .limit(days+1);
-    }
-
+	
 	@Override
-	public Map<Resource, Integer> getResourcesByAdress(String adress) {
+	//public Map<String, Integer> getResourcesByAdress(String adress) {
+	public List<Object[]> getResourcesByAdress(String adress,Date dateStart , Date dateEnd) {
+
 		// TODO Auto-generated method stub
-		return null;
+		// TODO Add the Date Constraint with Conditions
+		if (dateStart==null)
+			dateStart = new Date(0);
+		if (dateEnd==null)
+			dateEnd= new Date();
+		
+		
+		List<Object[]> listResult = em.createQuery("SELECT DISTINCT(r) , count(t) FROM Resource r , Term t WHERE t.projects.client.address=:adress and r.idUser=t.pkTerm.idResource GROUP BY r.idUser ")
+				.setParameter("adress", adress).getResultList();
+
+		return listResult;
 	}
 
 	@Override
@@ -237,5 +262,28 @@ public class ResourceBusiness implements ResourceBusinessInterface{
 	public Competence getCompetence() {
 		return (Competence)em.createQuery("SELECT c FROM Competence c ").getResultList().get(0);
 	}
+
 	
+	
+	
+	//Calculate Number of Days between too Dates without counting the weekends
+	
+	private long countWeekDaysStream ( LocalDate start , LocalDate stop ) {
+	    // Code taken from the Answer by Ravindra Ranwala.
+	    // https://stackoverflow.com/a/51010738/642706
+	    long count = 0;
+	    Set < DayOfWeek > weekend = EnumSet.of( DayOfWeek.SATURDAY , DayOfWeek.SUNDAY );
+	    final long weekDaysBetween =  getDays(start, start.until(stop, ChronoUnit.DAYS))
+	    		.filter( d -> ! weekend.contains( ((LocalDate)d).getDayOfWeek() ) ).count();
+	    		//start.datesuntil(stop, ChronoUnit.DAYS)
+	              //                       .filter( d -> ! weekend.contains( d.getDayOfWeek() ) )
+	                //                     .count();
+	    return count;
+	}
+	
+
+	public static Stream<LocalDate> getDays(LocalDate start, long days){
+        return Stream.iterate(start, date -> date.plusDays(1))
+                .limit(days+1);
+    }
 }

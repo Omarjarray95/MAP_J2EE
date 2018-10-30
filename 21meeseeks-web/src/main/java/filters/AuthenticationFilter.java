@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
+import io.jsonwebtoken.Jwts;
 //import io.jsonwebtoken.Jwts;
 import utilities.Secured;
 
@@ -131,8 +132,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 			Key key = new SecretKeySpec(keyString.getBytes(), 0, keyString.getBytes().length, "DES");
 			System.out.println("the key is : " + key);
 
-	//		System.out.println("test:" + Jwts.parser().setSigningKey(key).parseClaimsJws(token));
-			System.out.println("#### valid token : " + token);
+			System.out.println("test:" + Jwts.parser().setSigningKey(key).parseClaimsJws(token));
+			//System.out.println("#### valid token : " + token);
 
 		} catch (Exception e) {
 			System.out.println("#### invalid token : " + token);

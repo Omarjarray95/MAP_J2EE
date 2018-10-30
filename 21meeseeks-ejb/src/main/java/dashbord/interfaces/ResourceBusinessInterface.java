@@ -1,6 +1,7 @@
 package dashbord.interfaces;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.LocalBean;
@@ -23,8 +24,9 @@ public interface ResourceBusinessInterface {
 	public Integer countResourceByCompetence(Integer idCompetence);
 	public Integer countResourceDynamic(Integer idSeniority , Integer idCompetence , Integer idField 
 			, String available , boolean dayOff , boolean type,Integer level);
-	public Map<Resource , Integer> getResourcesByAdress(String adress);
+	public List<Object[]> getResourcesByAdress(String adress , Date dateStart , Date dateEnd);
 	public Map<Competence , Long> getRessourcesByCompetence();
 	public Competence getCompetence();
+	
 	
 }
