@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import enums.ProjectType;
 @Entity
@@ -23,20 +29,26 @@ public class Project  implements Serializable{
 	private int idProject;
 	
 	private String name;
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CET")
 	@Temporal(TemporalType.DATE)
 	private Date dateStart;
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CET")
 	@Temporal(TemporalType.DATE)
 	private Date dateEnd;
 	private String picture;
+	private String description;
+	@Enumerated(EnumType.STRING)
 	private ProjectType projectType;
 	
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER)
 	private List<Term> terms;
 	
 	@ManyToOne
 	private Client client;
 	
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER)
 	private List<Competence> competences;
 	
 	
@@ -93,6 +105,12 @@ public class Project  implements Serializable{
 	}
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	

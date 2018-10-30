@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,12 +14,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import enums.RequestStatus;
 @Entity
-public class ProjectRequest implements Serializable{
+public class ProjectRequest implements Serializable
+{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRequest;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date depositDate;
 	private String nameProject;
 	@Temporal(TemporalType.DATE)
@@ -25,12 +31,44 @@ public class ProjectRequest implements Serializable{
 	@Temporal(TemporalType.DATE)
 	private Date dateEndProject;
 	private String descriptionProject;
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<Competence> competences; 
 	private int resourcesNumber;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Client client;
+	private String presentedBy;
+	private String comments;
+	private RequestStatus requestStatus;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date reviewDate;
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Admin> reviewedBy;
+	private boolean archived;
 	
+	public RequestStatus getRequestStatus() {
+		return requestStatus;
+	}
+	public void setRequestStatus(RequestStatus requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+	public Date getReviewDate() {
+		return reviewDate;
+	}
+	public void setReviewDate(Date reviewDate) {
+		this.reviewDate = reviewDate;
+	}
+	public List<Admin> getReviewedBy() {
+		return reviewedBy;
+	}
+	public void setReviewedBy(List<Admin> reviewedBy) {
+		this.reviewedBy = reviewedBy;
+	}
+	public boolean isArchived() {
+		return archived;
+	}
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
 	public int getIdRequest() {
 		return idRequest;
 	}
@@ -85,8 +123,17 @@ public class ProjectRequest implements Serializable{
 	public void setClient(Client client) {
 		this.client = client;
 	}
-	
-	
-	
+	public String getPresentedBy() {
+		return presentedBy;
+	}
+	public void setPresentedBy(String presentedBy) {
+		this.presentedBy = presentedBy;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 	
 }

@@ -6,16 +6,20 @@ import java.util.List;
 import java.util.Locale.Category;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import enums.ClientType;
 
 @Entity
 public class Client extends User implements Serializable {
 
 	private String clientName;
 	private String logo;
-	@ManyToOne(fetch=FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
 	private ClientType clientType;
 	@ManyToOne(fetch=FetchType.EAGER)
 	private ClientCategory clientCategory;
@@ -62,11 +66,12 @@ public class Client extends User implements Serializable {
 		this.clientName = clientName;
 	}
 
-	public ClientType getClientType() {
+
+	public enums.ClientType getClientType() {
 		return clientType;
 	}
 
-	public void setClientType(ClientType clientType) {
+	public void setClientType(enums.ClientType clientType) {
 		this.clientType = clientType;
 	}
 
