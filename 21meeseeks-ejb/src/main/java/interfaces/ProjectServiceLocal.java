@@ -16,7 +16,7 @@ import entities.ProjectRequest;
 @Local
 public interface ProjectServiceLocal {
 public Project addProject(Project p);
-public Project addProjectfromRequest(ProjectRequest request);
+public Project addProjectFromRequest(ProjectRequest pr);
 public List<Project> getAllProjects();
 public String projectlisttoJson(List<Project> c) ;
 public String  projectoJson(Project c) ;

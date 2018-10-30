@@ -57,7 +57,8 @@ public class ClientResource {
 				@QueryParam("email") String email,
 				@QueryParam("address") String address,
 				@QueryParam("clientType") String clientType,
-				@QueryParam("clientCategory") String clientCategory
+				@QueryParam("clientCategory") String clientCategory,
+				@QueryParam("phoneNumber") String phoneNumber
 			  ) {
 		  enums.ClientType ct=null;
 		  criterias=new HashMap<String, String>();
@@ -66,7 +67,8 @@ public class ClientResource {
 		  if(email!=null){criterias.put("email", email+"%");}
 		  if(address!=null){criterias.put("address", address+"%");}
 		  if(clientType!=null){criterias.put("clientType", ct.valueOf(clientType).toString());}
-		  if(clientCategory!=null)criterias.put("clientCategory", clientCategory);
+		  if(clientCategory!=null){criterias.put("clientCategory", clientCategory);}
+		  if(phoneNumber!=null){criterias.put("phoneNumber", phoneNumber);}
 		List<Client> c=CSL.getClientsByCriterias(criterias);
 		if(c.size()!=0)
 		{

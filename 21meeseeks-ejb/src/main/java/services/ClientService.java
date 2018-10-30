@@ -101,13 +101,23 @@ return c;
 		@Override
 		public Client editClient(Client c) {
 			Client oldclient=em.find(Client.class,c.getIdUser());
+
+			if(c.getClientCategory()!=null){
+				if(findClientCategory(c.getClientCategory())!=null)
+				{
+			        oldclient.setClientCategory(this.findClientCategory(c.getClientCategory()));
+				}
+			
+			
+			}
+			
+			
 		
 				oldclient.setClientName(c.getClientName());
 				oldclient.setEmail(c.getEmail());
 				oldclient.setLogo(c.getLogo());
 				oldclient.setPhoneNumber(c.getPhoneNumber());
 				oldclient.setClientType(c.getClientType());
-		        oldclient.setClientCategory(this.findClientCategory(c.getClientCategory()));
 		        oldclient.setAddress(c.getAddress());
 			em.merge(oldclient);
 			return oldclient;
@@ -133,8 +143,15 @@ return c;
 	@Override
 	public ClientCategory findClientCategory(ClientCategory cc) {
 		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e  where e.name = :name",ClientCategory.class);
-		ClientCategory cf=query.setParameter("name",cc.getName()).getSingleResult();
-return cf;
+		List<ClientCategory> lcf=query.setParameter("name",cc.getName()).getResultList();
+		if(lcf.size()!=0)
+		{
+			return lcf.get(0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	@Override
 	public boolean deleteClientCategory(String title) {

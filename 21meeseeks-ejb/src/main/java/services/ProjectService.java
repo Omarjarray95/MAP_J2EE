@@ -55,31 +55,37 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 	}
 
 	@Override
-	public Project addProjectfromRequest(ProjectRequest prequest) {
-		
-			Project p=new Project();
-			p.setClient(prequest.getClient());
-			p.setCompetences(prequest.getCompetences());
-			p.setDateStart(prequest.getDateStartProject());
-			p.setDateEnd(prequest.getDateEndProject());
-			p.setName(prequest.getNameProject());
-			Date now=new Date();
-			/*if(now.before(prequest.getDateStartProject()))
-			{
-				p.setProjectType(ProjectType.valueOf("NEW"));
-			}
-			else if(now.after(prequest.getDateEndProject()))
-			{
-				p.setProjectType(ProjectType.valueOf("DONE"));
-			}
-			else
-			{
-				p.setProjectType(ProjectType.valueOf("DONE"));
-			}
-			*/
-			em.persist(p);
-		return p;
-	}
+	public Project addProjectFromRequest(ProjectRequest pr) {
+		Project p=new Project();
+		p.setClient(pr.getClient());
+		p.setDateEnd(pr.getDateEndProject());
+		p.setDateStart(pr.getDateStartProject());
+		p.setCompetences(pr.getCompetences());
+		 if(p.getDateStart().after(new Date()))
+		 {
+			 p.setProjectType(ProjectType.valueOf("NEW"));
+		 }
+		 else if(p.getDateEnd().before(new Date()))
+		 {
+			 p.setProjectType(ProjectType.valueOf("DONE"));
+
+		 }
+		 else
+		 {
+			 p.setProjectType(ProjectType.valueOf("ONGOING"));
+
+		 }
+		 p.setDescription(pr.getDescriptionProject());
+		 em.persist(p);
+		 ProjectRequest req=em.find(ProjectRequest.class,pr.getIdRequest());
+		 RequestService rs=new RequestService();
+		 rs.UpdateProjectRequestStatus(req);
+		 req.setReviewDate(new Date());
+		 em.merge(req);
+		 
+		// TODO Auto-generated method stub
+return p;
+		}
 
 	@Override
 	public List<Project> getAllProjects() {
@@ -175,5 +181,5 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 		// TODO Auto-generated method stub
 		return c;
 	}
-	
+
 }
