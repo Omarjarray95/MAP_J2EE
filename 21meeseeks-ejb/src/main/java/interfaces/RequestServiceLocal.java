@@ -26,6 +26,8 @@ public interface RequestServiceLocal
 	
 	public boolean ArchiveProjectRequest(int PRID);
 	
+	public boolean DeArchiveProjectRequest(int PRID);
+	
 	public boolean UpdateProjectRequestStatus(ProjectRequest PR);
 	
 	public List<ProjectRequest> SearchThroughProjectRequests(boolean archived, Map<String, Date> DateMap, List<String> StatusList, List<String> Strings);
@@ -38,11 +40,15 @@ public interface RequestServiceLocal
 	
 	public int SendLeaveRequest(LeaveRequest LR);
 	
-	public List<LeaveRequest> ShowAllLeaveRequests();
+	public List<LeaveRequest> ShowArchivedLeaveRequests();
+	
+	public List<LeaveRequest> ShowPendingLeaveRequests();
 	
 	public boolean UpdateLeaveRequest(LeaveRequest LR);
 	
-	public boolean DeleteLeaveRequest(int LRID);
+	public boolean ArchiveLeaveRequest(int LRID);
+	
+	public boolean DeArchiveLeaveRequest(int LRID);
 	
 	public List<LeaveRequest> SortLeaveRequests(String Criteria, String Direction);
 	

@@ -101,9 +101,24 @@ public class RequestResource
 	
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response DeleteProjectRequest(ProjectRequest PR) 
+	public Response ArchiveProjectRequest(ProjectRequest PR) 
 	{
 		if (RSL.ArchiveProjectRequest(PR.getIdRequest()))
+		{
+			return Response.status(Status.OK).build();
+		}
+		else
+		{
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+	}
+	
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("dearchive")
+	public Response DeArchiveProjectRequest(ProjectRequest PR) 
+	{
+		if (RSL.DeArchiveProjectRequest(PR.getIdRequest()))
 		{
 			return Response.status(Status.OK).build();
 		}
@@ -259,11 +274,26 @@ public class RequestResource
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("Leave")
-	public Response ShowAllLeaveRequests() 
+	public Response ShowPendingLeaveRequests() 
 	{
-		if (!RSL.ShowAllLeaveRequests().isEmpty())
+		if (!RSL.ShowPendingLeaveRequests().isEmpty())
 		{
-			return Response.ok(RSL.ShowAllLeaveRequests()).build();
+			return Response.ok(RSL.ShowPendingLeaveRequests()).build();
+		}
+		else
+		{
+			return Response.status(Status.NO_CONTENT).build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("Leave/archive")
+	public Response ShowArchivedLeaveRequests() 
+	{
+		if (!RSL.ShowArchivedLeaveRequests().isEmpty())
+		{
+			return Response.ok(RSL.ShowArchivedLeaveRequests()).build();
 		}
 		else
 		{
@@ -290,9 +320,24 @@ public class RequestResource
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("Leave")
-	public Response DeleteLeaveRequest(LeaveRequest LR) 
+	public Response ArchiveLeaveRequest(LeaveRequest LR) 
 	{
-		if (RSL.DeleteLeaveRequest(LR.getIdLeaveRequest()))
+		if (RSL.ArchiveLeaveRequest(LR.getIdLeaveRequest()))
+		{
+			return Response.status(Status.OK).build();
+		}
+		else
+		{
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+	}
+	
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("Leave/dearchive")
+	public Response DeArchiveLeaveRequest(LeaveRequest LR) 
+	{
+		if (RSL.DeArchiveLeaveRequest(LR.getIdLeaveRequest()))
 		{
 			return Response.status(Status.OK).build();
 		}

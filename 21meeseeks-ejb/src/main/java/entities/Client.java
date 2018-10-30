@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale.Category;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,8 +30,7 @@ public class Client extends User implements Serializable {
 	@OneToMany(mappedBy = "client"
 			,fetch=FetchType.EAGER)
 	private List<Note> notes;
-	@OneToMany(mappedBy = "client"
-			,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "client")
 	private List<ProjectRequest> projectRequests;
 	
 	

@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 @Entity
 public class LeaveRequest implements Serializable{
 
@@ -22,16 +25,23 @@ public class LeaveRequest implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idLeaveRequest;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private Date fromDate;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private Date toDate;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private Date depositDate;
 	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Resource resource;
 	private String description;
 	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private LeaveType leaveType;
+	private boolean archived;
 	
 	public int getIdLeaveRequest() {
 		return idLeaveRequest;
@@ -74,6 +84,12 @@ public class LeaveRequest implements Serializable{
 	}
 	public void setDepositDate(Date depositDate) {
 		this.depositDate = depositDate;
+	}
+	public boolean isArchived() {
+		return archived;
+	}
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 	
 	

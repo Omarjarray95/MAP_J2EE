@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import enums.RequestStatus;
 @Entity
 public class ProjectRequest implements Serializable
@@ -24,24 +27,32 @@ public class ProjectRequest implements Serializable
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRequest;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private Date depositDate;
 	private String nameProject;
 	@Temporal(TemporalType.DATE)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
 	private Date dateStartProject;
 	@Temporal(TemporalType.DATE)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
 	private Date dateEndProject;
 	private String descriptionProject;
-	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(cascade=CascadeType.PERSIST, fetch=FetchType.EAGER)
 	private List<Competence> competences; 
 	private int resourcesNumber;
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	private Client client;
 	private String presentedBy;
 	private String comments;
 	private RequestStatus requestStatus;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT")
 	private Date reviewDate;
-	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	private List<Admin> reviewedBy;
 	private boolean archived;
 	

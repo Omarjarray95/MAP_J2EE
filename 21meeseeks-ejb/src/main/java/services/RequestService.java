@@ -33,6 +33,30 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 	{
 		PR.setDepositDate(new Date());
 		PR.setRequestStatus(RequestStatus.SENT);
+		PR.setArchived(false);
+		List<Competence> LC0 = new ArrayList<>();
+		for (Competence C : PR.getCompetences())
+		{
+			try
+			{
+				Competence C0 = em.find(Competence.class, C.getIdCompetence());
+				LC0.add(C0);
+			}
+			catch (Exception E)
+			{
+				System.out.println(E);
+			}
+		}
+		PR.setCompetences(LC0);
+		try
+		{
+			Client Cl = em.find(Client.class, PR.getClient().getIdUser());
+			PR.setClient(Cl);
+		}
+		catch(Exception E)
+		{
+			PR.setClient(null);
+		}
 		em.persist(PR);
 		System.out.println("Your Project Request Has Been Sent To The Administrator");
 		return PR.getIdRequest();
@@ -58,15 +82,42 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 			ProjectRequest PRTU = em.find(ProjectRequest.class, PR.getIdRequest());
 
 			PRTU.setDepositDate(new Date());
-			PRTU.setNameProject(PR.getNameProject());
-			PRTU.setDateStartProject(PR.getDateStartProject());
-			PRTU.setDateEndProject(PR.getDateEndProject());
-			PRTU.setDescriptionProject(PR.getDescriptionProject());
-			PRTU.setCompetences(PR.getCompetences());
-			PRTU.setResourcesNumber(PR.getResourcesNumber());
-			PRTU.setClient(PR.getClient());
-			PRTU.setPresentedBy(PR.getPresentedBy());
-			PRTU.setComments(PR.getComments());
+			if (PR.getNameProject() != null)
+			{
+				PRTU.setNameProject(PR.getNameProject());
+			}
+			if (PR.getDateStartProject() != null)
+			{
+				PRTU.setDateStartProject(PR.getDateStartProject());
+			}
+			if (PR.getDateEndProject() != null)
+			{
+				PRTU.setDateEndProject(PR.getDateEndProject());
+			}
+			if (PR.getDescriptionProject() != null)
+			{
+				PRTU.setDescriptionProject(PR.getDescriptionProject());
+			}
+			if (PR.getCompetences() != null)
+			{
+				PRTU.setCompetences(PR.getCompetences());
+			}
+			if (PR.getResourcesNumber() != 0)
+			{
+				PRTU.setResourcesNumber(PR.getResourcesNumber());
+			}
+			if (PR.getClient() != null)
+			{
+				PRTU.setClient(PR.getClient());
+			}
+			if (PR.getPresentedBy() != null)
+			{
+				PRTU.setPresentedBy(PR.getPresentedBy());
+			}
+			if (PR.getComments() != null)
+			{
+				PRTU.setComments(PR.getComments());
+			}
 			
 			em.merge(PRTU);
 			
@@ -85,6 +136,25 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 		try 
 		{
 			PR.setArchived(true);
+			PR.setRequestStatus(RequestStatus.ARCHIVED);
+			em.merge(PR);
+			return true;
+		} 
+		catch (Exception e) 
+		{
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean DeArchiveProjectRequest(int PRID) 
+	{
+		ProjectRequest PR = em.find(ProjectRequest.class, PRID);
+		try 
+		{
+			PR.setArchived(false);
+			PR.setRequestStatus(RequestStatus.NOT_ARCHIVED);
+			em.merge(PR);
 			return true;
 		} 
 		catch (Exception e) 
@@ -125,7 +195,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 		{
 			LPR = ShowArchivedProjectRequests();
 		}
-		if (DateMap.get("DepositDateMax") != null)
+		if (DateMap.get("DepositDateMax") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -135,7 +205,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("DepositDateMin") != null)
+		if (DateMap.get("DepositDateMin") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -145,7 +215,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("StartDateMax") != null)
+		if (DateMap.get("StartDateMax") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -155,7 +225,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("StartDateMin") != null)
+		if (DateMap.get("StartDateMin") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -165,7 +235,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("EndDateMax") != null)
+		if (DateMap.get("EndDateMax") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -175,7 +245,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("EndDateMin") != null)
+		if (DateMap.get("EndDateMin") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -185,7 +255,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("ReviewDateMax") != null)
+		if (DateMap.get("ReviewDateMax") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -195,7 +265,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (DateMap.get("ReviewDateMin") != null)
+		if (DateMap.get("ReviewDateMin") != null && !LPR.isEmpty())
 		{
 			for (int i = LPR.size()-1; i > -1; i--)
 			{
@@ -205,7 +275,7 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				}
 			}
 		}
-		if (!StatusList.isEmpty())
+		if (!StatusList.isEmpty() && !LPR.isEmpty())
 		{
 			for (String S : StatusList)
 			{
@@ -225,9 +295,12 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 				for (String S : Strings)
 				{
 					System.out.println(S);
-					if (!VerifyContent(LPR.get(i), S))
+					if (!LPR.isEmpty())
 					{
-						LPR.remove(LPR.get(i));
+						if (!VerifyContent(LPR.get(i), S))
+						{
+							LPR.remove(LPR.get(i));
+						}
 					}
 				}
 			}
@@ -305,15 +378,22 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 		LeaveType LT = em.find(LeaveType.class, LR.getLeaveType().getIdLeaveType());
 		LR.setLeaveType(LT);
 		LR.setDepositDate(new Date());
+		LR.setArchived(false);
 		em.persist(LR);
 		System.out.println("Your Leave Request Has Been Sent To The Administrator");
 		return LR.getIdLeaveRequest();
 	}
 
 	@Override
-	public List<LeaveRequest> ShowAllLeaveRequests() 
+	public List<LeaveRequest> ShowArchivedLeaveRequests() 
 	{
-		return em.createQuery("SELECT r FROM LeaveRequest r ORDER BY r.depositDate DESC", LeaveRequest.class).getResultList();
+		return em.createQuery("SELECT r FROM LeaveRequest r Where r.archived = true ORDER BY r.depositDate DESC", LeaveRequest.class).getResultList();
+	}
+	
+	@Override
+	public List<LeaveRequest> ShowPendingLeaveRequests() 
+	{
+		return em.createQuery("SELECT r FROM LeaveRequest r Where r.archived = false ORDER BY r.depositDate DESC", LeaveRequest.class).getResultList();
 	}
 
 	@Override
@@ -323,12 +403,24 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 		{
 			LeaveRequest LRTU = em.find(LeaveRequest.class, LR.getIdLeaveRequest());
 
-			LRTU.setFromDate(LR.getFromDate());
-			LRTU.setToDate(LR.getToDate());
-			LRTU.setDepositDate(LR.getDepositDate());
-			LRTU.setResource(LR.getResource());
-			LRTU.setDescription(LR.getDescription());
-			LRTU.setLeaveType(LR.getLeaveType());
+			if (LR.getFromDate() != null)
+			{
+				LRTU.setFromDate(LR.getFromDate());
+			}
+			if (LR.getToDate() != null)
+			{
+				LRTU.setToDate(LR.getToDate());
+			}
+			if (LR.getDescription() != null)
+			{
+				LRTU.setDescription(LR.getDescription());
+			}
+			if (LR.getLeaveType() != null)
+			{
+				LeaveType LT0 = em.find(LeaveType.class, LR.getLeaveType().getIdLeaveType());
+				LRTU.setLeaveType(LT0);
+			}
+			LRTU.setDepositDate(new Date());
 			
 			em.merge(LRTU);
 			
@@ -341,12 +433,27 @@ public class RequestService implements RequestServiceLocal, RequestServiceRemote
 	}
 
 	@Override
-	public boolean DeleteLeaveRequest(int LRID) 
+	public boolean ArchiveLeaveRequest(int LRID) 
 	{
 		LeaveRequest LR = em.find(LeaveRequest.class, LRID);
 		try 
 		{
-			em.remove(LR);
+			LR.setArchived(true);
+			return true;
+		} 
+		catch (Exception e) 
+		{
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean DeArchiveLeaveRequest(int LRID) 
+	{
+		LeaveRequest LR = em.find(LeaveRequest.class, LRID);
+		try 
+		{
+			LR.setArchived(false);
 			return true;
 		} 
 		catch (Exception e) 
