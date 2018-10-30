@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import entities.Client;
 import entities.ClientCategory;
+import entities.Project;
 
 /**
  * Session Bean implementation class ClientService
@@ -42,7 +43,17 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
 
 	@Override
 	public int addClient(Client c) {
+		if(c.getClientCategory()!=null){
+			if(findClientCategory(c.getClientCategory())!=null)
+			{
         c.setClientCategory(this.findClientCategory(c.getClientCategory()));
+			}
+			else
+			{
+				c.setClientCategory(null);
+			}
+		
+		}
 		em.persist(c);
 		return (c.getIdUser());
 	}
@@ -90,13 +101,23 @@ return c;
 		@Override
 		public Client editClient(Client c) {
 			Client oldclient=em.find(Client.class,c.getIdUser());
+
+			if(c.getClientCategory()!=null){
+				if(findClientCategory(c.getClientCategory())!=null)
+				{
+			        oldclient.setClientCategory(this.findClientCategory(c.getClientCategory()));
+				}
+			
+			
+			}
+			
+			
 		
 				oldclient.setClientName(c.getClientName());
 				oldclient.setEmail(c.getEmail());
 				oldclient.setLogo(c.getLogo());
 				oldclient.setPhoneNumber(c.getPhoneNumber());
 				oldclient.setClientType(c.getClientType());
-		        oldclient.setClientCategory(this.findClientCategory(c.getClientCategory()));
 		        oldclient.setAddress(c.getAddress());
 			em.merge(oldclient);
 			return oldclient;
@@ -122,8 +143,15 @@ return c;
 	@Override
 	public ClientCategory findClientCategory(ClientCategory cc) {
 		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e  where e.name = :name",ClientCategory.class);
-		ClientCategory cf=query.setParameter("name",cc.getName()).getSingleResult();
-return cf;
+		List<ClientCategory> lcf=query.setParameter("name",cc.getName()).getResultList();
+		if(lcf.size()!=0)
+		{
+			return lcf.get(0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	@Override
 	public boolean deleteClientCategory(String title) {
@@ -141,8 +169,29 @@ return cf;
 	@Override
 	public List<ClientCategory> listClientCategories() {
 		// TODO Auto-generated method stub
-		return null;
+		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e",ClientCategory.class);
+		List<ClientCategory> cf=query.getResultList();
+		return cf;
 	}
+
+	
+
+	@Override
+	public ClientCategory editClientCategory(ClientCategory c) {
+		// TODO Auto-generated method stub
+		ClientCategory cc=em.find(ClientCategory.class,c.getIdCategory());
+		if((cc!=null))
+		{
+			cc.setDescription(c.getDescription());
+			cc.setName(c.getName());
+			em.merge(cc);
+				
+		}
+		return cc;
+		
+	}	
+	
+	
 	//
 	//json converting
 	//
@@ -179,6 +228,7 @@ return cf;
 			
 			return test;
 	}
+
 
 	
 

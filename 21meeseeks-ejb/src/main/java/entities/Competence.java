@@ -11,23 +11,34 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 @Entity
-public class Competence  implements Serializable{
+public class Competence  implements Serializable
+{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCompetence;
-	
 	private String Label;
 	@OneToMany(fetch=FetchType.EAGER)
 	private List<Level> levels;
 	private String description;
+	@ManyToMany(mappedBy="competences",fetch = FetchType.EAGER)
+	private List<ProjectRequest> projectRequests;
 	
-	
-	public String getDescription() {
+	public String getDescription() 
+	{
 		return description;
 	}
-	public void setDescription(String description) {
+	public void setDescription(String description) 
+	{
 		this.description = description;
+	}	
+	public List<ProjectRequest> getProjectRequests() {
+		return projectRequests;
 	}
+	public void setProjectRequests(List<ProjectRequest> projectRequests) 
+	{
+		this.projectRequests = projectRequests;
+	}
+	
 	public List<Level> getLevels() {
 		return levels;
 	}
@@ -46,9 +57,5 @@ public class Competence  implements Serializable{
 	public void setLabel(String label) {
 		Label = label;
 	}
-	
-	
-	
-	
 
 }

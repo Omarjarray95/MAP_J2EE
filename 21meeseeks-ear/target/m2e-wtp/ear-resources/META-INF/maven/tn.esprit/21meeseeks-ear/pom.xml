@@ -20,6 +20,18 @@
 			<artifactId>21meeseeks-ejb</artifactId>
 			<type>ejb</type>
 		</dependency>
+		
+		<dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>javax.transaction-api</artifactId>
+            <version>1.2</version>
+        </dependency>
+		<dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
+        	<scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<build>

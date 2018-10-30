@@ -5,12 +5,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class DayOff implements Serializable 
@@ -25,7 +28,8 @@ public class DayOff implements Serializable
 	private Date startDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Resource resource;
 	
 
@@ -44,7 +48,7 @@ public class DayOff implements Serializable
 	public void setLeaveType(LeaveType leaveType) {
 		this.leaveType = leaveType;
 	}
-
+	
 	public Resource getResource() {
 		return resource;
 	}

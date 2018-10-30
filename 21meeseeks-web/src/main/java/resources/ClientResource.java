@@ -57,7 +57,8 @@ public class ClientResource {
 				@QueryParam("email") String email,
 				@QueryParam("address") String address,
 				@QueryParam("clientType") String clientType,
-				@QueryParam("clientCategory") String clientCategory
+				@QueryParam("clientCategory") String clientCategory,
+				@QueryParam("phoneNumber") String phoneNumber
 			  ) {
 		  enums.ClientType ct=null;
 		  criterias=new HashMap<String, String>();
@@ -66,7 +67,8 @@ public class ClientResource {
 		  if(email!=null){criterias.put("email", email+"%");}
 		  if(address!=null){criterias.put("address", address+"%");}
 		  if(clientType!=null){criterias.put("clientType", ct.valueOf(clientType).toString());}
-		  if(clientCategory!=null)criterias.put("clientCategory", clientCategory);
+		  if(clientCategory!=null){criterias.put("clientCategory", clientCategory);}
+		  if(phoneNumber!=null){criterias.put("phoneNumber", phoneNumber);}
 		List<Client> c=CSL.getClientsByCriterias(criterias);
 		if(c.size()!=0)
 		{
@@ -113,13 +115,34 @@ public class ClientResource {
 	@POST
 	@Path("category")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces( MediaType.TEXT_PLAIN)
+	@Produces( MediaType.APPLICATION_JSON)
 	public Response addClientCategory(ClientCategory cc)
-	{
+	{	
+		 
 		cc.setIdCategory(CSL.addClientCategory(cc));
-		return Response.status(Status.CREATED).entity(cc).build();
+		if(cc.getIdCategory()==0)
+		{
+			return Response.status(Status.NOT_ACCEPTABLE).build();
+		}
+		{
+			return Response.status(Status.CREATED).entity(cc).build();	
+		}
 	}
-	
+	@PUT
+	@Path("category")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces( MediaType.APPLICATION_JSON)
+	public Response editClientCategory(ClientCategory cc)
+	{	
+		 ClientCategory cat=CSL.editClientCategory(cc);
+		if(cat==null)
+		{
+			return Response.status(Status.NOT_ACCEPTABLE).build();
+		}
+		{
+			return Response.status(Status.OK).entity(cat).build();	
+		}
+	}
 	/*
 	 * delete a Category by name
 	 */
@@ -134,7 +157,24 @@ public class ClientResource {
 	  return Response.status(Status.NOT_FOUND).entity(name+": category not found").build();	
 
 	  }
+	  @GET
+	  @Path("category")
+	  @Produces(MediaType.APPLICATION_JSON)
+	  public Response getallclientcategory() {
+		  	List<ClientCategory> list = CSL.listClientCategories();
+		  	if(list.size()!=0)
+		  	{
+	  return Response.status(Status.FOUND).entity(list).build();	
+		  	}
+		  	else
+		  	{
+		  	  return Response.status(Status.NO_CONTENT).build();	
 
+		  	}
+
+	  }
+
+	 
 	 
 	  
 }
